@@ -1,22 +1,24 @@
 import { FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../../stores';
 
 export const LoginPage = () => {
-
-  const onSubmit = (event: FormEvent<HTMLFormElement> ) => {
+  const navigate = useNavigate();
+  const loginUser = useAuthStore((state) => state.loginUser);
+  const onSubmit = async(event: FormEvent<HTMLFormElement> ) => {
     event.preventDefault();
     // const { username, password, remember } = event.target as HTMLFormElement;
-    const { username, password,remember } = event.target as typeof event.target & {
-      username: { value: string };
+    const { email, password } = event.target as typeof event.target & {
+      email: { value: string };
       password: { value: string };
-      remember: { checked: boolean }
     };
-    console.log(username.value, password.value, remember.checked);
-
-    username.value = '';
-    password.value = '';
-    remember.checked = false;
+    try {
+      await loginUser(email.value, password.value);
+      navigate('/dashboard');
+    } catch (error) {
+      console.log("Error -> No Authenticated", error);
+    }
   }
-
 
   return (
     <>
@@ -25,8 +27,8 @@ export const LoginPage = () => {
       <form onSubmit={ onSubmit }>
 
         <div className="mb-4">
-          <label className="block text-gray-600">Username</label>
-          <input type="text" name="username" autoComplete="off" />
+          <label className="block text-gray-600">Email</label>
+          <input type="text" name="email" autoComplete="off" />
         </div>
 
         <div className="mb-4">
@@ -38,7 +40,7 @@ export const LoginPage = () => {
           <input type="checkbox" name="remember" className="text-blue-500" />
           <label className="text-gray-600 ml-2">Remember Me</label>
         </div>
-        
+
         <div className="mb-6 text-blue-500">
           <a href="#" className="hover:underline">Forgot Password?</a>
         </div>

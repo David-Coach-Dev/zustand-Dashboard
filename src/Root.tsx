@@ -8,7 +8,7 @@ export const Root = () => {
   if (pathname === '/') {
     return <Navigate to="/dashboard" />;
   }
-  
+
   return (
     <main>
       <Outlet />

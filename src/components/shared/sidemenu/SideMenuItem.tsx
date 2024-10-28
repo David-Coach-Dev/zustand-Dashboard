@@ -9,7 +9,6 @@ interface Props {
   subTitle: string
 }
 
-
 export const SideMenuItem = ({ href, Icon, title, subTitle }: Props) => {
   return (
     <NavLink
